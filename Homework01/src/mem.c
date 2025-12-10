@@ -22,7 +22,20 @@ void *
 getmem(int nc, int ni)
 {
   // TODO: Add your code here...
-  return 0;
+  int fakeNc = nc;
+  if ((nc % 4) != 0)
+  {
+    fakeNc = nc + (4 - (nc % 4)); //bc memory should always be aligned to multiples of 4 bytes
+  }
+  
+  
+
+  int *p = calloc(1, fakeNc * (sizeof(char)) + ni * (sizeof(int)) + HLEN);
+
+  p[0] = nc;
+  p[1] = ni;
+
+  return (char *)p + HLEN;
 }
 
 /**
@@ -32,6 +45,7 @@ void
 freemem(void *mem)
 {
   // TODO: Add your code here...
+  free((char *)mem - HLEN);
 }
 
 /**
@@ -41,7 +55,13 @@ int
 getnc(void *mem)
 {
   // TODO: Add your code here...
-  return -1;
+  char *addr = (char *)mem - HLEN;
+
+  int *header = (int *)addr;
+
+  int numChar = header[0];
+
+  return numChar;
 }
 
 /**
@@ -51,7 +71,13 @@ int
 getni(void *mem)
 {
   // TODO: Add your code here...
-  return -1;
+  char *addr = (char *)mem - HLEN;
+
+  int *header = (int *)addr;
+
+  int numChar = header[1];
+
+  return numChar;
 }
 
 /**
@@ -61,7 +87,7 @@ char *
 getstr(void *mem)
 {
   // TODO: Add your code here...
-  return 0;
+  return (char *) mem;
 }
 
 /**
@@ -71,7 +97,15 @@ int *
 getintptr(void *mem)
 {
   // TODO: Add your code here...
-  return 0;
+  int nc = getnc(mem);
+  if ((nc % 4) != 0)
+  {
+    nc = nc + (4 - (nc%4));
+  }
+
+  int *ptr = (int *)((char *) mem + nc);
+
+  return ptr;
 }
 
 /**
@@ -81,7 +115,10 @@ int
 getint_at(void *mem, int idx, int *res)
 {
   // TODO: Add your code here...
-  return -1;
+  if (idx < 0 || idx >= getni(mem)) return -1;
+  int *valptr = getintptr(mem);
+  *res = valptr[idx];
+  return 0;
 }
 
 /**
@@ -91,7 +128,10 @@ int
 setint_at(void *mem, int idx, int val)
 {
   // TODO: Add your code here...
-  return -1;
+    if (idx < 0 || idx >= getni(mem)) return -1;
+  int *valptr = getintptr(mem);
+  valptr[idx] = val;
+  return 0;
 }
 
 /**
@@ -101,5 +141,17 @@ size_t
 cpstr(void *mem, const char *str, size_t len)
 {
   // TODO: Add your code here...
-  return 0;
+  int nc = getnc(mem);
+
+  if (len >= nc)
+  {
+    memcpy(mem, str, nc-1);
+    ((char *)mem)[nc-1] = '\0';
+    return nc;
+  }
+  else{
+    memcpy(mem,str,len);
+    ((char *)mem)[len] = '\0';
+    return len + 1;
+  }
 }

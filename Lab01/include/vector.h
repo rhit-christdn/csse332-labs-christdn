@@ -66,7 +66,7 @@ void vec_push_back(struct vector *vec, unsigned int elem);
  * Remove the element at the end of the vector.
  *
  * The length or size of the vector should shrink after this operation. Note
- * that you do not need to free up memory if the vector shrinks.
+ * that you do NOT need to free up memory if the vector shrinks.
  *
  * @param vec The vector on which to perform the operation.
  *

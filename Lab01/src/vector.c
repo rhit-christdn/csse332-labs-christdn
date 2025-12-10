@@ -44,7 +44,9 @@ vec_new()
 void
 vec_free(struct vector *vec)
 {
-  // TODO: Add your code here...
+  // DONE: Add your code here...
+  free(vec->data);
+  free(vec);
 }
 
 static unsigned int *
@@ -66,7 +68,14 @@ __vec_realloc(struct vector *vec)
 void
 vec_push_back(struct vector *vec, unsigned int elem)
 {
-  // TODO: Add your code here...
+  // DONE: Add your code here...
+  if (vec->len >= vec->cap)
+  {
+    __vec_realloc(vec);
+  }
+
+  vec->data[vec->len] = elem;
+  vec->len++;
 }
 
 /**
@@ -79,8 +88,13 @@ vec_pop_back(struct vector *vec)
     return (unsigned int)-1; // doesn't matter what we return.
   }
 
-  // TODO: Add your code here....
-  return 0;
+  // DONE: Add your code here....
+  
+  vec->len--;
+  ssize_t length = vec->len;
+  unsigned int returnVal = *(vec->data + length);
+
+  return returnVal;
 }
 
 /**
@@ -93,8 +107,11 @@ vec_elem_at(struct vector *vec, unsigned int i)
     return (unsigned int)-1; // doesn't matter what we return.
   }
 
-  // TODO: Add your code here...
-  return 0;
+  // Done: Add your code here...
+  unsigned int returnVal = *(vec->data + i);
+
+
+  return returnVal;
 }
 
 /**
@@ -108,5 +125,7 @@ vec_set_at(struct vector *vec, unsigned int i, unsigned int elem)
   }
 
   // TODO: Add your code here...
+  vec->data[i] = elem;
+
   return 0;
 }

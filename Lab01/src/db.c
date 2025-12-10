@@ -27,7 +27,11 @@ node_mk_node(struct oo_node *node)
 void
 node_rm_node(struct oo_node *node)
 {
-  // TODO: Add your code here...
+  // done: Add your code here...
+  node->next->prev = node->prev;
+  node->prev->next = node->next;
+
+  node->next = node->prev = node;
 }
 
 // This is a helper function, feel free to keep it here or remove it if you do
@@ -47,7 +51,10 @@ _node_add(struct oo_node *left, struct oo_node *node)
 void
 node_add_tail(struct oo_node *head, struct oo_node *node)
 {
-  // TODO: Add your code here..
+  // done: Add your code here..
+  struct oo_node *tail = head->prev;
+
+  _node_add(tail, node);
 }
 
 /**
@@ -56,7 +63,8 @@ node_add_tail(struct oo_node *head, struct oo_node *node)
 void
 node_add_head(struct oo_node *head, struct oo_node *node)
 {
-  // TODO: Add your code here..
+  // done: Add your code here..
+  _node_add(head, node);
 }
 
 /**
@@ -83,7 +91,9 @@ node_to_dbulong(struct oo_node *node)
 void
 db_add_record(struct db *db, struct oo_node *node)
 {
-  // TODO: Add your code here...
+  // done: Add your code here...
+  node_add_tail(&db->head, node);
+  db->rcount++;
 }
 
 /**
@@ -120,7 +130,7 @@ join_str_db(struct db *db)
 
   for(n = db->head.next; n != &db->head; n = n->next) {
     s = node_to_dbstr(n);
-    len += strlen(s->str);
+    len += strlen(s->str) + 1;
   }
 
   r = malloc(len + 1);
@@ -143,5 +153,24 @@ int
 searching_seek_and_destroy(struct db *db, unsigned long value)
 {
   // TODO: Add your code here....
-  return -1;
+  struct oo_node *n;
+  struct oo_node *next;
+  struct db_ulong *v;
+
+  int removed = 0;
+
+  for (n = db->head.next; n != &db->head; n = next)
+  {
+    next = n->next;
+    
+    v = node_to_dbulong(n);
+    if (v->value == value)
+    {
+      node_rm_node(n);
+      db->rcount--;
+      removed++;
+    }
+  }
+
+  return removed;
 }
