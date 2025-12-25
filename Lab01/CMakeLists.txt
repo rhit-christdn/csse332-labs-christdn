@@ -8,6 +8,7 @@ include(FetchContent)
 
 # Add an option for gradescope-specific build
 option(BUILD_GRADESCOPE "Build the unit tests for gradescope" OFF)
+option(BUILD_SOLUTIONS  "[INSTRUCTOR ONLY] Build with solutions for testing" OFF)
 
 # grab the cgrade test library
 FetchContent_Declare(
@@ -35,5 +36,8 @@ if(BUILD_GRADESCOPE)
   add_definitions(-DBUILD_GRADESCOPE)
 endif(BUILD_GRADESCOPE)
 
-add_subdirectory(tests)
+if(BUILD_SOLUTIONS)
+  MESSAGE(STATUS "WARNING: If you are a student and this shows up, you've messed up!")
+endif(BUILD_SOLUTIONS)
 
+add_subdirectory(tests)

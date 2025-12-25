@@ -153,6 +153,7 @@ int
 searching_seek_and_destroy(struct db *db, unsigned long value)
 {
   // TODO: Add your code here....
+<<<<<<< HEAD
   struct oo_node *n;
   struct oo_node *next;
   struct db_ulong *v;
@@ -173,4 +174,6 @@ searching_seek_and_destroy(struct db *db, unsigned long value)
   }
 
   return removed;
+=======
+>>>>>>> f4d88ea2ba3f79bef6f2c3fdf284939f1d054c62
 }

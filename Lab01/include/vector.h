@@ -81,12 +81,12 @@ unsigned int vec_pop_back(struct vector *vec);
  * element at that location. No changes to the vector should be observed.
  *
  * If the index integer is out of bounds, your function should set the
- * appropriate error number (see `man errno`).
+ * appropriate error number (see `man errno` in your terminal directory).
  *
  * @param vec The vector on which to perform the operation.
  * @param i   The index at which to access the element.
  *
- * @warn The valler of this function should always set `errno` to 0 before
+ * @warn The caller of this function should always set `errno` to 0 before
  *  calling this function to make sure that no errors have happened.
  *
  * Example:
@@ -99,7 +99,7 @@ unsigned int vec_pop_back(struct vector *vec);
  * }
  * \endcode
  *
- * @return the element at index i if valid, grabage and set errno on failure.
+ * @return the element at index i if valid, garbage and set errno on failure.
  */
 unsigned int vec_elem_at(struct vector *vec, unsigned int i);
 

@@ -41,6 +41,16 @@ hello_test_suite(void)
 int
 main(int argc, char **argv)
 {
+#ifdef BUILD_GRADESCOPE
+  struct cg_test_suite *ts = hello_test_suite();
+  int rc                   = cg_test_suite_runall(ts);
+
+  cg_test_suite_summarize(ts);
+  cg_test_suite_gradescopify_tests(ts, "hello_tests.run.json");
+
+  cg_test_suite_remove(ts);
+  return (rc > 0) ? EXIT_FAILURE : EXIT_SUCCESS;
+#else
   int rc                  = 0;
   struct cg_project *proj = cg_project_new("Problem 0: Build Tools");
 
@@ -48,11 +58,9 @@ main(int argc, char **argv)
   cg_project_runall(proj);
 
   cg_project_summarize(proj);
-#ifdef BUILD_GRADESCOPE
-  cg_project_gradescopify(proj);
-#endif
 
   rc = (proj->num_failures > 0) ? EXIT_FAILURE : EXIT_SUCCESS;
   cg_project_del(proj);
   return rc;
+#endif
 }
